@@ -1,0 +1,84 @@
+#server:
+#    port: ${SERVER_PORT}
+#    error:
+#        include-message: always
+#        include-binding-errors: always
+#spring:
+#    profiles:
+#        active: ${ACTIVE_PROFILE:test}
+#    datasource:
+#        url: jdbc:postgresql://localhost:5432/${DB_NAME}
+#        username: ${DB_USERNAME}
+#        password: ${DB_PASSWORD}
+#    jpa:
+#        hibernate:
+#            ddl-auto: create-drop
+#        properties:
+#            hibernate:
+#            dialect: org.hibernate.dialect.PostgreSQLDialect
+#            format_sql: true
+#        show-sql: true
+#
+#    mail:
+#        host: ${EMAIL_HOST}
+#        port: ${EMAIL_PORT}
+#        username: ${EMAIL_ID}
+#        password: ${EMAIL_PASSWORD}
+#        default-encoding: UTF-8
+#        properties:
+#          mail:
+#              mime:
+#                  charset: UTF
+#              smtp:
+#                  writetimeout: 10000
+#                  connectiontimeout: 10000
+#                  timeout: 10000
+#                  auth: true
+#                  starttls:
+#                      enable: true
+#                      required: true
+#
+#
+#
+#
+#
+#
+spring:
+  profiles:
+    active: test # Replace ${ACTIVE_PROFILE} with the active profile
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      format_sql: true
+    show-sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/web_service_mobile_v1 # Replace ${DB_NAME} with the actual database name
+    username: postgres # Replace ${DB_USERNAME} with the database username
+    password: menespostgres # Replace ${DB_PASSWORD} with the database password
+  mail:
+    host: smtp.gmail.com # Replace ${EMAIL_HOST} with the email host (e.g., smtp.gmail.com)
+    port: 587 # Replace ${EMAIL_PORT} with the email port (e.g., 587)
+    username: dduymen@gmail.com # Replace ${EMAIL_ID} with the email username
+    password: vcuw qnga gors vitw # Replace ${EMAIL_PASSWORD} with the email password
+    default-encoding: UTF-8
+    properties:
+      mail:
+        mime:
+          charset: UTF
+        smtp:
+          writetimeout: 10000
+          connectiontimeout: 10000
+          timeout: 10000
+          auth: true
+          starttls:
+            enable: true
+            required: true
+server:
+  port: 9001
+
+VERIFY_EMAIL_HOST: http://localhost:${server.port}
+TITLE: Lambda

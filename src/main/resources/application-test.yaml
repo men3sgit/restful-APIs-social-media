@@ -1,0 +1,15 @@
+#Server
+SERVER_PORT: 11111
+ACTIVE_PROFILE: test
+
+#Email
+EMAIL_HOST: smtp.gmail.com
+EMAIL_PORT: 587
+EMAIL_ID: dduymen@gmail.com
+EMAIL_PASSWORD: vcuw qnga gors vitw
+VERIFY_EMAIL_HOST: https://localhost:${SERVER_PORT}
+
+#Database
+DB_USERNAME: postgres
+DB_PASSWORD: menespostgres
+DB_NAME: web_service_mobile_v1
