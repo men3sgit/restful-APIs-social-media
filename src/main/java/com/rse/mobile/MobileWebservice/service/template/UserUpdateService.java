@@ -1,8 +1,7 @@
 package com.rse.mobile.MobileWebservice.service.template;
 
-import com.rse.mobile.MobileWebservice.dto.UserDTO;
-import com.rse.mobile.MobileWebservice.model.user.User;
-import com.rse.mobile.MobileWebservice.request.UpdateUserRequest;
+import com.rse.mobile.MobileWebservice.model.user.UserDTO;
+import com.rse.mobile.MobileWebservice.controller.request.UpdateUserRequest;
 
 // UserUpdateService.java
 public interface UserUpdateService {

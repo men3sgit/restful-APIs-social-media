@@ -1,8 +1,8 @@
 package com.rse.mobile.MobileWebservice.controller;
 
-import com.rse.mobile.MobileWebservice.request.LoginRequest;
-import com.rse.mobile.MobileWebservice.request.RegistrationRequest;
-import com.rse.mobile.MobileWebservice.response.RegistrationResponse;
+import com.rse.mobile.MobileWebservice.controller.request.LoginRequest;
+import com.rse.mobile.MobileWebservice.controller.request.RegistrationRequest;
+import com.rse.mobile.MobileWebservice.controller.response.RegistrationResponse;
 import com.rse.mobile.MobileWebservice.service.template.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

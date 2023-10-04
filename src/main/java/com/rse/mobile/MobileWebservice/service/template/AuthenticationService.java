@@ -1,7 +1,7 @@
 package com.rse.mobile.MobileWebservice.service.template;
 
-import com.rse.mobile.MobileWebservice.request.LoginRequest;
-import com.rse.mobile.MobileWebservice.request.RegistrationRequest;
+import com.rse.mobile.MobileWebservice.controller.request.LoginRequest;
+import com.rse.mobile.MobileWebservice.controller.request.RegistrationRequest;
 
 public interface AuthenticationService {
     String registerNewUser(RegistrationRequest request);

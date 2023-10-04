@@ -1,8 +1,6 @@
-package com.rse.mobile.MobileWebservice.request;
+package com.rse.mobile.MobileWebservice.controller.request;
 
 import lombok.*;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter

@@ -14,7 +14,7 @@ import com.rse.mobile.MobileWebservice.repository.UserRepository;
 import com.rse.mobile.MobileWebservice.service.template.ConfirmationService;
 import com.rse.mobile.MobileWebservice.service.template.EmailService;
 import com.rse.mobile.MobileWebservice.service.template.UserService;
-import com.rse.mobile.MobileWebservice.exception.ApiRequestException;
+import com.rse.mobile.MobileWebservice.exception.request.ApiRequestException;
 import com.rse.mobile.MobileWebservice.exception.auth.ApiAuthenticationRequestException;
 import com.rse.mobile.MobileWebservice.model.token.ConfirmationToken;
 

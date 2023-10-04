@@ -1,12 +1,12 @@
 package com.rse.mobile.MobileWebservice.service.impl;
 
-import com.rse.mobile.MobileWebservice.exception.ApiRequestException;
+import com.rse.mobile.MobileWebservice.exception.request.ApiRequestException;
 import com.rse.mobile.MobileWebservice.exception.auth.ApiAuthenticationRequestException;
 import com.rse.mobile.MobileWebservice.model.user.Role;
 import com.rse.mobile.MobileWebservice.model.user.User;
 import com.rse.mobile.MobileWebservice.service.EmailValidator;
-import com.rse.mobile.MobileWebservice.request.LoginRequest;
-import com.rse.mobile.MobileWebservice.request.RegistrationRequest;
+import com.rse.mobile.MobileWebservice.controller.request.LoginRequest;
+import com.rse.mobile.MobileWebservice.controller.request.RegistrationRequest;
 import com.rse.mobile.MobileWebservice.service.template.AuthenticationService;
 import com.rse.mobile.MobileWebservice.service.template.UserService;
 import lombok.RequiredArgsConstructor;

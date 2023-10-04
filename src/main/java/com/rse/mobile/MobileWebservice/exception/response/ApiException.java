@@ -1,4 +1,4 @@
-package com.rse.mobile.MobileWebservice.exception;
+package com.rse.mobile.MobileWebservice.exception.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

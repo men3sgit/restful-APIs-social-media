@@ -1,12 +1,10 @@
 package com.rse.mobile.MobileWebservice.controller;
 
-import com.rse.mobile.MobileWebservice.exception.ApiRequestException;
-import com.rse.mobile.MobileWebservice.model.user.User;
-import com.rse.mobile.MobileWebservice.repository.UserRepository;
-import com.rse.mobile.MobileWebservice.request.ForgotPasswordRequest;
-import com.rse.mobile.MobileWebservice.request.UpdateUserRequest;
-import com.rse.mobile.MobileWebservice.response.HttpResponse;
-import com.rse.mobile.MobileWebservice.response.HttpResponseFactory;
+import com.rse.mobile.MobileWebservice.exception.request.ApiRequestException;
+import com.rse.mobile.MobileWebservice.controller.request.ForgotPasswordRequest;
+import com.rse.mobile.MobileWebservice.controller.request.UpdateUserRequest;
+import com.rse.mobile.MobileWebservice.controller.response.HttpResponse;
+import com.rse.mobile.MobileWebservice.controller.response.HttpResponseFactory;
 import com.rse.mobile.MobileWebservice.service.template.UserService;
 import com.rse.mobile.MobileWebservice.service.template.UserUpdateService;
 import lombok.RequiredArgsConstructor;

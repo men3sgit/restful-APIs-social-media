@@ -1,6 +1,5 @@
-package com.rse.mobile.MobileWebservice.response;
+package com.rse.mobile.MobileWebservice.controller.response;
 
-import com.rse.mobile.MobileWebservice.response.HttpResponse;
 import org.springframework.http.HttpStatus;
 import java.time.LocalDateTime;
 

@@ -1,4 +1,4 @@
-package com.rse.mobile.MobileWebservice.request;
+package com.rse.mobile.MobileWebservice.controller.request;
 
 import com.rse.mobile.MobileWebservice.model.user.User;
 import lombok.Data;

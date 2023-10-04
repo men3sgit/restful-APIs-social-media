@@ -46,6 +46,12 @@ public class ResetPasswordToken implements Token {
     }
 
     @Override
+    public boolean isExpired() {
+        return LocalDateTime.now().isBefore(expiredAt);
+    }
+
+
+    @Override
     public String generateToken() {
         return token;
     }

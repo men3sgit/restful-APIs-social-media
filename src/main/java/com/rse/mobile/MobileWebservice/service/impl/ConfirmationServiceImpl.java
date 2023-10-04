@@ -1,6 +1,6 @@
 package com.rse.mobile.MobileWebservice.service.impl;
 
-import com.rse.mobile.MobileWebservice.exception.ApiRequestException;
+import com.rse.mobile.MobileWebservice.exception.request.ApiRequestException;
 import com.rse.mobile.MobileWebservice.exception.auth.ApiAuthenticationRequestException;
 import com.rse.mobile.MobileWebservice.model.token.ConfirmationToken;
 import com.rse.mobile.MobileWebservice.model.user.User;
@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service

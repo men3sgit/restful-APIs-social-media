@@ -1,11 +1,11 @@
 package com.rse.mobile.MobileWebservice.service.impl;
 
-import com.rse.mobile.MobileWebservice.dto.UserDTO;
+import com.rse.mobile.MobileWebservice.model.user.UserDTO;
 import com.rse.mobile.MobileWebservice.dto.UserDTOMapper;
-import com.rse.mobile.MobileWebservice.exception.ApiRequestException;
+import com.rse.mobile.MobileWebservice.exception.request.ApiRequestException;
 import com.rse.mobile.MobileWebservice.model.user.User;
 import com.rse.mobile.MobileWebservice.repository.UserRepository;
-import com.rse.mobile.MobileWebservice.request.UpdateUserRequest;
+import com.rse.mobile.MobileWebservice.controller.request.UpdateUserRequest;
 import com.rse.mobile.MobileWebservice.service.template.UserUpdateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
