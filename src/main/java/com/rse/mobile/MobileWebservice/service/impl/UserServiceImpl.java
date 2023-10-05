@@ -1,7 +1,10 @@
 package com.rse.mobile.MobileWebservice.service.impl;
 
+import com.rse.mobile.MobileWebservice.dto.UserDTOMapper;
 import com.rse.mobile.MobileWebservice.model.token.ResetPasswordToken;
 import com.rse.mobile.MobileWebservice.model.token.Token;
+import com.rse.mobile.MobileWebservice.model.user.UserDTO;
+import com.rse.mobile.MobileWebservice.repository.PasswordResetTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +30,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ConfirmationService confirmationService;
     private final EmailService emailService;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final UserDTOMapper userDTOMapper;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -40,11 +45,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String registerNewUser(User user) {
+    public UserDTO registerNewUser(User user) {
         LOGGER.info("Registering a new user with email: {}", user.getEmail());
 
-        boolean userExists = userRepository.findByEmail(user.getEmail()).isPresent();
-        if (userExists) {
+        boolean isUserExists = userRepository.findByEmail(user.getEmail()).isPresent();
+        if (isUserExists) {
             LOGGER.error("Email already taken: {}", user.getEmail());
             throw new ApiRequestException("Email taken");
         }
@@ -65,11 +70,11 @@ public class UserServiceImpl implements UserService {
 
         // TODO Email sender send token to email
         LOGGER.info("Sending confirmation token email to user: {}", user.getEmail());
-        emailService.sendHtmlMailMessage(user.getFullName(), user.getEmail(), token);
+        sendTokenEmail(user.getFullName(), user.getEmail(), token);
 
         LOGGER.info("Registration successful for user: {}", user.getEmail());
 
-        return token;
+        return userDTOMapper.apply(user);
     }
 
     @Override
@@ -88,12 +93,33 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String processForgotPassword(String email) {
-        String status = "Successful";
-        User existUser = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Email invalid"));
-        Token tokenObj = new ResetPasswordToken(existUser);
-        String token = tokenObj.generateToken();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
-        return status;
+        ResetPasswordToken resetPasswordToken = createAndSaveResetPasswordToken(user);
+        sendTokenEmail(user.getEmail(), user.getFullName(), resetPasswordToken.generateToken());
+        return "Successful";
+    }
+
+
+    private ResetPasswordToken createAndSaveResetPasswordToken(User user) {
+        ResetPasswordToken resetPasswordToken = new ResetPasswordToken(user);
+        try {
+            return passwordResetTokenRepository.save(resetPasswordToken);
+        } catch (Exception e) {
+            LOGGER.error("Failed to save reset password token for user: {}", user.getEmail(), e);
+            throw new ApiRequestException("Failed to initiate password reset process");
+        }
+    }
+
+    private void sendTokenEmail(String userEmail, String userFullName, String resetToken) {
+        try {
+            emailService.sendHtmlMailMessage(userEmail, userFullName, resetToken);
+            LOGGER.info("Reset password email sent successfully to user: {}", userEmail);
+        } catch (Exception e) {
+            LOGGER.error("Failed to send reset password email to user: {}", userEmail, e);
+            throw new ApiRequestException("Failed to send reset password email");
+        }
     }
 
 

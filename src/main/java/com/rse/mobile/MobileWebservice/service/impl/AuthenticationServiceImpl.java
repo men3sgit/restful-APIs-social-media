@@ -1,9 +1,11 @@
 package com.rse.mobile.MobileWebservice.service.impl;
 
+import com.rse.mobile.MobileWebservice.dto.UserDTOMapper;
 import com.rse.mobile.MobileWebservice.exception.request.ApiRequestException;
 import com.rse.mobile.MobileWebservice.exception.auth.ApiAuthenticationRequestException;
 import com.rse.mobile.MobileWebservice.model.user.Role;
 import com.rse.mobile.MobileWebservice.model.user.User;
+import com.rse.mobile.MobileWebservice.model.user.UserDTO;
 import com.rse.mobile.MobileWebservice.service.EmailValidator;
 import com.rse.mobile.MobileWebservice.controller.request.LoginRequest;
 import com.rse.mobile.MobileWebservice.controller.request.RegistrationRequest;
@@ -26,9 +28,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserService userService;
     private final EmailValidator emailValidator;
     private final AuthenticationManager authenticationManager;
+    private final UserDTOMapper userDTOMapper;
 
     @Override
-    public String registerNewUser(RegistrationRequest request) {
+    public UserDTO registerNewUser(RegistrationRequest request) {
         boolean isValidEmail = emailValidator.test(request.getEmail());
         if (!isValidEmail) {
             LOGGER.error("Invalid email provided during registration: {}", request.getEmail());
@@ -55,7 +58,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             LOGGER.info("Authenticating user with email: {}", request.getEmail());
             authenticationManager.authenticate(authentication);
             LOGGER.info("User authenticated successfully: {}", request.getEmail());
-        } catch (AuthenticationException e) {
+        } catch (RuntimeException e) {
             LOGGER.error("Authentication failed for user with email: {}", request.getEmail(), e);
             throw new ApiAuthenticationRequestException(e.getMessage());
         }
