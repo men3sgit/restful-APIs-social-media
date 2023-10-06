@@ -2,9 +2,9 @@ package com.rse.mobile.MobileWebservice.service.impl;
 
 import com.rse.mobile.MobileWebservice.dto.UserDTOMapper;
 import com.rse.mobile.MobileWebservice.model.token.ResetPasswordToken;
-import com.rse.mobile.MobileWebservice.model.token.Token;
 import com.rse.mobile.MobileWebservice.model.user.UserDTO;
 import com.rse.mobile.MobileWebservice.repository.PasswordResetTokenRepository;
+import com.rse.mobile.MobileWebservice.service.template.VerificationService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,9 +29,9 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final ConfirmationService confirmationService;
-    private final EmailService emailService;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final UserDTOMapper userDTOMapper;
+    private final VerificationService verificationService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -48,33 +48,55 @@ public class UserServiceImpl implements UserService {
     public UserDTO registerNewUser(User user) {
         LOGGER.info("Registering a new user with email: {}", user.getEmail());
 
-        boolean isUserExists = userRepository.findByEmail(user.getEmail()).isPresent();
-        if (isUserExists) {
-            LOGGER.error("Email already taken: {}", user.getEmail());
-            throw new ApiRequestException("Email taken");
-        }
+        validateUserEmail(user.getEmail());
+        saveUserToDatabaseWithPasswordDecoder(user);
 
-        try {
-            String encodedPassword = passwordEncoder.encode(user.getPassword());
-            user.setPassword(encodedPassword);
-            userRepository.save(user);
-        } catch (RuntimeException e) {
-            LOGGER.error("Error saving user: {}", e.getMessage(), e);
-            throw new ApiRequestException("Your request parameters are not valid.");
-        }
-
-        // TODO send token confirm
-        ConfirmationToken generateConfirmToken = confirmationService.generateConfirmationTokenWithUser(user);
-        confirmationService.saveConfirmationToken(generateConfirmToken);
-        String token = generateConfirmToken.getToken();
-
-        // TODO Email sender send token to email
-        LOGGER.info("Sending confirmation token email to user: {}", user.getEmail());
-        sendTokenEmail(user.getFullName(), user.getEmail(), token);
-
+        ConfirmationToken confirmationToken = generateAndSaveConfirmationToken(user);
+        sendConfirmationEmail(user.getFullName(), user.getEmail(), confirmationToken.getToken());
         LOGGER.info("Registration successful for user: {}", user.getEmail());
 
         return userDTOMapper.apply(user);
+    }
+
+    public void saveUserToDatabaseWithPasswordDecoder(User user) {
+        try {
+            // Decode the provided plain text password (this is not a recommended practice)
+            String decodedPassword = passwordEncoder.encode(user.getPassword());
+            user.setPassword(decodedPassword);
+            // Save the user to the database
+            userRepository.save(user);
+        } catch (Exception e) {
+            LOGGER.error("Error decoding password and saving user to the database: {}", e.getMessage(), e);
+            throw new RuntimeException("Error saving user to the database");
+        }
+    }
+
+    private void validateUserEmail(String email) {
+        if (userRepository.findByEmail(email).isPresent()) {
+            LOGGER.error("Email already taken: {}", email);
+            throw new ApiRequestException("Email taken");
+        }
+    }
+
+
+    private ConfirmationToken generateAndSaveConfirmationToken(User user) {
+        ConfirmationToken confirmationToken = confirmationService.generateConfirmationTokenWithUser(user);
+        confirmationService.saveConfirmationToken(confirmationToken);
+        return confirmationToken;
+    }
+
+    private void sendConfirmationEmail(String fullName, String email, String token) {
+        // TODO: Implement your email sending logic here
+        LOGGER.info("Sending confirmation token email to user: {}", email);
+        // Implement your email sending logic using the provided parameters and the generated token
+        try {
+            verificationService.sendVerificationTokenByEmail(fullName, email, token);
+            LOGGER.info("Reset password email sent successfully to user: {}", email);
+        } catch (Exception e) {
+            LOGGER.error("Failed to send reset password email to user: {}", email, e);
+            throw new ApiRequestException("Failed to send reset password email");
+        }
+
     }
 
     @Override
@@ -97,7 +119,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
         ResetPasswordToken resetPasswordToken = createAndSaveResetPasswordToken(user);
-        sendTokenEmail(user.getEmail(), user.getFullName(), resetPasswordToken.generateToken());
+        sendResetPasswordTokenEmail(user.getEmail(), user.getFullName(), resetPasswordToken.generateToken());
         return "Successful";
     }
 
@@ -112,9 +134,9 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void sendTokenEmail(String userEmail, String userFullName, String resetToken) {
+    private void sendResetPasswordTokenEmail(String userEmail, String userFullName, String resetToken) {
         try {
-            emailService.sendHtmlMailMessage(userEmail, userFullName, resetToken);
+//            emailService.sendHtmlMailMessage(userEmail, userFullName, resetToken);
             LOGGER.info("Reset password email sent successfully to user: {}", userEmail);
         } catch (Exception e) {
             LOGGER.error("Failed to send reset password email to user: {}", userEmail, e);

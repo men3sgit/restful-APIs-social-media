@@ -15,7 +15,7 @@ public record SuccessResponse(LocalDateTime timestamp, String message, HttpStatu
         return timestamp;
     }
 
-    @Override
+    @Override   
     public int getStatusCode() {
         return httpStatus.value();
     }

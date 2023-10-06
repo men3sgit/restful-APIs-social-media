@@ -28,7 +28,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserService userService;
     private final EmailValidator emailValidator;
     private final AuthenticationManager authenticationManager;
-    private final UserDTOMapper userDTOMapper;
 
     @Override
     public UserDTO registerNewUser(RegistrationRequest request) {

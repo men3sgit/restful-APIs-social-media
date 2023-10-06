@@ -1,6 +1,7 @@
 package com.rse.mobile.MobileWebservice.service.impl;
 
 import com.rse.mobile.MobileWebservice.service.template.EmailService;
+import com.rse.mobile.MobileWebservice.service.template.VerificationService;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.util.Map;
+import java.util.Random;
 
 import static com.rse.mobile.MobileWebservice.model.helper.EmailUtils.getVerificationUrl;
 
@@ -87,4 +89,7 @@ public class EmailServiceImpl implements EmailService {
     private String getContentId(String filename) {
         return "<" + filename + ">";
     }
+
+
+
 }

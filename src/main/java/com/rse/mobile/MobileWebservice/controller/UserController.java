@@ -5,6 +5,7 @@ import com.rse.mobile.MobileWebservice.controller.request.UpdateUserRequest;
 import com.rse.mobile.MobileWebservice.controller.response.ResponseHandler;
 import com.rse.mobile.MobileWebservice.exception.request.ApiRequestException;
 import com.rse.mobile.MobileWebservice.model.user.UserDTO;
+import com.rse.mobile.MobileWebservice.service.template.EmailService;
 import com.rse.mobile.MobileWebservice.service.template.UserService;
 import com.rse.mobile.MobileWebservice.service.template.UserUpdateService;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +55,7 @@ public class UserController {
             return responseHandler.buildSuccessResponse("Password reset link sent successfully", Map.of());
         } catch (Exception e) {
             LOGGER.error("Error occurred while processing forgot password request for email: {}", email, e);
-            return responseHandler.buildInternalServerErrorResponse("Internal Server Error");
+            return responseHandler.buildInternalServerErrorResponse(e.getMessage());
         }
     }
 }
