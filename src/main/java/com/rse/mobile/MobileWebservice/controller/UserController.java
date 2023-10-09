@@ -1,13 +1,12 @@
 package com.rse.mobile.MobileWebservice.controller;
 
 import com.rse.mobile.MobileWebservice.controller.request.ForgotPasswordRequest;
+import com.rse.mobile.MobileWebservice.controller.request.PasswordResetRequest;
 import com.rse.mobile.MobileWebservice.controller.request.UpdateUserRequest;
 import com.rse.mobile.MobileWebservice.controller.response.ResponseHandler;
 import com.rse.mobile.MobileWebservice.exception.request.ApiRequestException;
 import com.rse.mobile.MobileWebservice.model.user.UserDTO;
-import com.rse.mobile.MobileWebservice.service.template.EmailService;
-import com.rse.mobile.MobileWebservice.service.template.UserService;
-import com.rse.mobile.MobileWebservice.service.template.UserUpdateService;
+import com.rse.mobile.MobileWebservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +21,6 @@ import java.util.Map;
 @RequestMapping(path = "api/v1/users")
 public class UserController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
-    private final UserUpdateService userUpdateService;
     private final UserService userService;
     private final ResponseHandler responseHandler;
 
@@ -33,7 +31,7 @@ public class UserController {
     ) {
         LOGGER.info("Received update user request for user ID: {}", userId);
         try {
-            UserDTO userDTO = userUpdateService.updateUser(userId, updateUserRequest);
+            UserDTO userDTO = userService.updateUser(userId, updateUserRequest);
             return responseHandler.buildSuccessResponse("User information updated successfully", Map.of("user", userDTO));
         } catch (ApiRequestException e) {
             String msg = "User not found";
@@ -57,6 +55,11 @@ public class UserController {
             LOGGER.error("Error occurred while processing forgot password request for email: {}", email, e);
             return responseHandler.buildInternalServerErrorResponse(e.getMessage());
         }
+    }
+    @PutMapping(path = "/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest request){
+        return null;
+
     }
 }
 

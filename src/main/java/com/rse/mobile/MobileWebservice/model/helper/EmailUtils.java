@@ -10,4 +10,7 @@ public class EmailUtils {
     public static String getVerificationUrl(String host, String token) {
         return host + "/api/v1/auth/verify?token=" + token;
     }
+    public static String getPasswordResetUrl(String host, String token) {
+        return host + "/api/v1/auth/password-reset?token=" + token;
+    }
 }

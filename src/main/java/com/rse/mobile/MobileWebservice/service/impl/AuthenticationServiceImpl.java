@@ -1,6 +1,5 @@
 package com.rse.mobile.MobileWebservice.service.impl;
 
-import com.rse.mobile.MobileWebservice.dto.UserDTOMapper;
 import com.rse.mobile.MobileWebservice.exception.request.ApiRequestException;
 import com.rse.mobile.MobileWebservice.exception.auth.ApiAuthenticationRequestException;
 import com.rse.mobile.MobileWebservice.model.user.Role;
@@ -9,13 +8,13 @@ import com.rse.mobile.MobileWebservice.model.user.UserDTO;
 import com.rse.mobile.MobileWebservice.service.EmailValidator;
 import com.rse.mobile.MobileWebservice.controller.request.LoginRequest;
 import com.rse.mobile.MobileWebservice.controller.request.RegistrationRequest;
-import com.rse.mobile.MobileWebservice.service.template.AuthenticationService;
-import com.rse.mobile.MobileWebservice.service.template.UserService;
+import com.rse.mobile.MobileWebservice.service.AuthenticationService;
+import com.rse.mobile.MobileWebservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationServiceImpl.class);
-
     private final UserService userService;
     private final EmailValidator emailValidator;
     private final AuthenticationManager authenticationManager;

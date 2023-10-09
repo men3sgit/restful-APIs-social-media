@@ -4,7 +4,7 @@ import com.rse.mobile.MobileWebservice.controller.request.LoginRequest;
 import com.rse.mobile.MobileWebservice.controller.request.RegistrationRequest;
 import com.rse.mobile.MobileWebservice.controller.response.ResponseHandler;
 import com.rse.mobile.MobileWebservice.model.user.UserDTO;
-import com.rse.mobile.MobileWebservice.service.template.AuthenticationService;
+import com.rse.mobile.MobileWebservice.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

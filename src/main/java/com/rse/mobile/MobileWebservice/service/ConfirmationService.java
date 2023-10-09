@@ -1,4 +1,4 @@
-package com.rse.mobile.MobileWebservice.service.template;
+package com.rse.mobile.MobileWebservice.service;
 
 import com.rse.mobile.MobileWebservice.model.token.ConfirmationToken;
 import com.rse.mobile.MobileWebservice.model.user.User;
