@@ -1,9 +1,6 @@
-package com.rse.mobile.MobileWebservice.controller.request;
+package com.rse.mobile.MobileWebservice.model.requests;
 
-import com.rse.mobile.MobileWebservice.model.user.User;
 import lombok.Data;
-
-import java.time.LocalDate;
 
 @Data
 public class UpdateUserRequest {

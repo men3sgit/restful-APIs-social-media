@@ -1,12 +1,16 @@
 package com.rse.mobile.MobileWebservice.service.impl;
 
-import com.rse.mobile.MobileWebservice.controller.request.UpdateUserRequest;
 import com.rse.mobile.MobileWebservice.dto.UserDTOMapper;
-import com.rse.mobile.MobileWebservice.model.token.ResetPasswordToken;
+import com.rse.mobile.MobileWebservice.exception.auth.ApiAuthenticationRequestException;
+import com.rse.mobile.MobileWebservice.exception.request.ApiRequestException;
+import com.rse.mobile.MobileWebservice.model.requests.PasswordResetRequest;
+import com.rse.mobile.MobileWebservice.model.requests.UpdateUserRequest;
+import com.rse.mobile.MobileWebservice.model.token.ConfirmationToken;
+import com.rse.mobile.MobileWebservice.model.token.PasswordResetToken;
+import com.rse.mobile.MobileWebservice.model.user.User;
 import com.rse.mobile.MobileWebservice.model.user.UserDTO;
-import com.rse.mobile.MobileWebservice.repository.PasswordResetTokenRepository;
-import com.rse.mobile.MobileWebservice.service.EmailService;
-import com.rse.mobile.MobileWebservice.service.VerificationService;
+import com.rse.mobile.MobileWebservice.repository.UserRepository;
+import com.rse.mobile.MobileWebservice.service.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,16 +18,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.rse.mobile.MobileWebservice.model.user.User;
-import com.rse.mobile.MobileWebservice.repository.UserRepository;
-import com.rse.mobile.MobileWebservice.service.ConfirmationService;
-import com.rse.mobile.MobileWebservice.service.UserService;
-import com.rse.mobile.MobileWebservice.exception.request.ApiRequestException;
-import com.rse.mobile.MobileWebservice.exception.auth.ApiAuthenticationRequestException;
-import com.rse.mobile.MobileWebservice.model.token.ConfirmationToken;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Service
@@ -33,7 +31,7 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final ConfirmationService confirmationService;
-    private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final PasswordResetService passwordResetService;
     private final UserDTOMapper userDTOMapper;
     private final VerificationService verificationService;
     private final EmailService emailService;
@@ -121,9 +119,7 @@ public class UserServiceImpl implements UserService {
     public String processForgotPassword(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-
-        ResetPasswordToken resetPasswordToken = createAndSaveResetPasswordToken(user);
-        final String token  = resetPasswordToken.generateToken();
+        String token = passwordResetService.generatePasswordResetToken(user);
         sendResetPasswordTokenEmail(user.getFullName(), user.getEmail(), token);
         return token;
     }
@@ -152,6 +148,17 @@ public class UserServiceImpl implements UserService {
         return userDTOMapper.apply(existingUser);
     }
 
+    @Override
+    public String resetPassword(PasswordResetRequest request) {
+        PasswordResetToken passwordResetToken = passwordResetService.getPasswordResetToken(request.token());
+        User user = passwordResetToken.getUser();
+        user.setPassword(passwordEncoder.encode(request.newPassword()));
+        userRepository.save(user);
+        passwordResetToken.setResetAt(LocalDateTime.now());
+        passwordResetService.savePasswordResetToken(passwordResetToken);
+        return "Update password Successful";
+    }
+
     private String getFieldValue(UpdateUserRequest updateUserRequest, String fieldName) {
         return switch (fieldName) {
             case "fullName" -> updateUserRequest.getFullName();
@@ -171,16 +178,6 @@ public class UserServiceImpl implements UserService {
         // Add more data types as needed
 
         throw new IllegalArgumentException("Unsupported data type: " + fieldType);
-    }
-
-    private ResetPasswordToken createAndSaveResetPasswordToken(User user) {
-        ResetPasswordToken resetPasswordToken = new ResetPasswordToken(user);
-        try {
-            return passwordResetTokenRepository.save(resetPasswordToken);
-        } catch (Exception e) {
-            LOGGER.error("Failed to save reset password token for user: {}", user.getEmail(), e);
-            throw new ApiRequestException("Failed to initiate password reset process");
-        }
     }
 
     private void sendResetPasswordTokenEmail(String fullName, String email, String resetToken) {

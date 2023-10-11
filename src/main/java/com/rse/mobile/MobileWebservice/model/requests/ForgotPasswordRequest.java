@@ -1,4 +1,4 @@
-package com.rse.mobile.MobileWebservice.controller.request;
+package com.rse.mobile.MobileWebservice.model.requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

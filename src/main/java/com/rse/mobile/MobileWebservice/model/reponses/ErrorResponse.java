@@ -1,4 +1,4 @@
-package com.rse.mobile.MobileWebservice.controller.response;
+package com.rse.mobile.MobileWebservice.model.reponses;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

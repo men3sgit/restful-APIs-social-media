@@ -11,6 +11,6 @@ public class EmailUtils {
         return host + "/api/v1/auth/verify?token=" + token;
     }
     public static String getPasswordResetUrl(String host, String token) {
-        return host + "/api/v1/auth/password-reset?token=" + token;
+        return host + "/api/v1/users/password-reset?token=" + token;
     }
 }

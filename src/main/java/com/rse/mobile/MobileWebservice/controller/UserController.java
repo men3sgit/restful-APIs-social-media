@@ -1,10 +1,10 @@
 package com.rse.mobile.MobileWebservice.controller;
 
-import com.rse.mobile.MobileWebservice.controller.request.ForgotPasswordRequest;
-import com.rse.mobile.MobileWebservice.controller.request.PasswordResetRequest;
-import com.rse.mobile.MobileWebservice.controller.request.UpdateUserRequest;
-import com.rse.mobile.MobileWebservice.controller.response.ResponseHandler;
+import com.rse.mobile.MobileWebservice.model.reponses.ResponseHandler;
 import com.rse.mobile.MobileWebservice.exception.request.ApiRequestException;
+import com.rse.mobile.MobileWebservice.model.requests.ForgotPasswordRequest;
+import com.rse.mobile.MobileWebservice.model.requests.PasswordResetRequest;
+import com.rse.mobile.MobileWebservice.model.requests.UpdateUserRequest;
 import com.rse.mobile.MobileWebservice.model.user.UserDTO;
 import com.rse.mobile.MobileWebservice.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -56,9 +56,11 @@ public class UserController {
             return responseHandler.buildInternalServerErrorResponse(e.getMessage());
         }
     }
-    @PutMapping(path = "/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest request){
-        return null;
+
+    @PutMapping(path = "/password-reset")
+    public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest request) {
+        userService.resetPassword(request);
+        return responseHandler.buildSuccessResponse("Your password reset successfully");
 
     }
 }

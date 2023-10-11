@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.generator.internal.GeneratedGeneration;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -13,7 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class ResetPasswordToken implements Token {
+public class PasswordResetToken implements Token {
     private static final int EXPIRATION_TIME_IN_MINUTES = 15; // 15 minutes expired
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,8 +39,9 @@ public class ResetPasswordToken implements Token {
     )
     private LocalDateTime createdAt;
     private LocalDateTime expiredAt;
+    private LocalDateTime resetAt;
 
-    public ResetPasswordToken(User user) {
+    public PasswordResetToken(User user) {
         this.createdAt = LocalDateTime.now();
         this.token = UUID.randomUUID().toString();
         this.user = user;
@@ -54,5 +57,8 @@ public class ResetPasswordToken implements Token {
     @Override
     public String generateToken() {
         return token;
+    }
+    public void resetAt(LocalDateTime resetAt){
+        this.resetAt = resetAt;
     }
 }

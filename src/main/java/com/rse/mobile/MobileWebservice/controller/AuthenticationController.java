@@ -2,7 +2,7 @@ package com.rse.mobile.MobileWebservice.controller;
 
 import com.rse.mobile.MobileWebservice.controller.request.LoginRequest;
 import com.rse.mobile.MobileWebservice.controller.request.RegistrationRequest;
-import com.rse.mobile.MobileWebservice.controller.response.ResponseHandler;
+import com.rse.mobile.MobileWebservice.model.reponses.ResponseHandler;
 import com.rse.mobile.MobileWebservice.model.user.UserDTO;
 import com.rse.mobile.MobileWebservice.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,7 @@
 package com.rse.mobile.MobileWebservice.service;
 
-import com.rse.mobile.MobileWebservice.controller.request.UpdateUserRequest;
+import com.rse.mobile.MobileWebservice.model.requests.PasswordResetRequest;
+import com.rse.mobile.MobileWebservice.model.requests.UpdateUserRequest;
 import com.rse.mobile.MobileWebservice.model.user.User;
 import com.rse.mobile.MobileWebservice.model.user.UserDTO;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,4 +17,6 @@ public interface UserService {
 
     String processForgotPassword(String email);
     UserDTO updateUser(Long userId, UpdateUserRequest updateUserRequest);
+
+    String resetPassword(PasswordResetRequest request);
 }
