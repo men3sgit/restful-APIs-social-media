@@ -1,7 +1,8 @@
-package com.rse.mobile.MobileWebservice.model.user;
+package com.rse.mobile.MobileWebservice.dto;
+
+import com.rse.mobile.MobileWebservice.model.entities.Role;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public record UserDTO (
         String email,

@@ -4,9 +4,9 @@ import com.rse.mobile.MobileWebservice.exception.request.ApiAuthenticationReques
 import com.rse.mobile.MobileWebservice.exception.request.ApiRequestException;
 import com.rse.mobile.MobileWebservice.model.requests.LoginRequest;
 import com.rse.mobile.MobileWebservice.model.requests.RegistrationRequest;
-import com.rse.mobile.MobileWebservice.model.user.Role;
-import com.rse.mobile.MobileWebservice.model.user.User;
-import com.rse.mobile.MobileWebservice.model.user.UserDTO;
+import com.rse.mobile.MobileWebservice.model.entities.Role;
+import com.rse.mobile.MobileWebservice.model.entities.User;
+import com.rse.mobile.MobileWebservice.dto.UserDTO;
 import com.rse.mobile.MobileWebservice.service.AuthenticationService;
 import com.rse.mobile.MobileWebservice.service.EmailValidator;
 import com.rse.mobile.MobileWebservice.service.UserService;

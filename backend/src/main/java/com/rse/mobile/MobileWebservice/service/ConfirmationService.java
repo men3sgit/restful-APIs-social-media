@@ -1,7 +1,7 @@
 package com.rse.mobile.MobileWebservice.service;
 
-import com.rse.mobile.MobileWebservice.model.token.ConfirmationToken;
-import com.rse.mobile.MobileWebservice.model.user.User;
+import com.rse.mobile.MobileWebservice.model.entities.tokens.ConfirmationToken;
+import com.rse.mobile.MobileWebservice.model.entities.User;
 
 public interface ConfirmationService {
      void saveConfirmationToken(ConfirmationToken token);

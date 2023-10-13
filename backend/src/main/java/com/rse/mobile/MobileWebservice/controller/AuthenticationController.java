@@ -3,7 +3,7 @@ package com.rse.mobile.MobileWebservice.controller;
 import com.rse.mobile.MobileWebservice.model.reponses.ResponseHandler;
 import com.rse.mobile.MobileWebservice.model.requests.LoginRequest;
 import com.rse.mobile.MobileWebservice.model.requests.RegistrationRequest;
-import com.rse.mobile.MobileWebservice.model.user.UserDTO;
+import com.rse.mobile.MobileWebservice.dto.UserDTO;
 import com.rse.mobile.MobileWebservice.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

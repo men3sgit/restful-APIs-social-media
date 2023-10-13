@@ -1,12 +1,10 @@
-package com.rse.mobile.MobileWebservice.model.token;// PasswordResetToken.java
+package com.rse.mobile.MobileWebservice.model.entities.tokens;// PasswordResetToken.java
 
-import com.rse.mobile.MobileWebservice.model.user.User;
+import com.rse.mobile.MobileWebservice.model.entities.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.generator.internal.GeneratedGeneration;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

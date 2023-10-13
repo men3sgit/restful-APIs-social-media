@@ -1,4 +1,4 @@
-package com.rse.mobile.MobileWebservice.model.user;
+package com.rse.mobile.MobileWebservice.model.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -7,11 +7,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "_user")
@@ -51,6 +52,25 @@ public class User implements UserDetails {
     private Role role;
     private Boolean enabled;
     private Boolean locked;
+
+    // Bio and other user details
+    private String avatar;
+    private String bio;
+
+    // Followers
+    @ManyToMany
+    @JoinTable(
+            name = "user_followers",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "follower_id")
+    )
+    private Set<User> followers = new HashSet<>();
+
+    // Following
+    @ManyToMany(mappedBy = "followers")
+    private Set<User> following = new HashSet<>();
+
+
 
     public User(String email, String password, String fullName, LocalDate dob, Role role) {
         this.email = email;
@@ -97,5 +117,7 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return enabled;
     }
+
+
 
 }

@@ -1,7 +1,7 @@
 package com.rse.mobile.MobileWebservice.service;
 
-import com.rse.mobile.MobileWebservice.model.token.PasswordResetToken;
-import com.rse.mobile.MobileWebservice.model.user.User;
+import com.rse.mobile.MobileWebservice.model.entities.tokens.PasswordResetToken;
+import com.rse.mobile.MobileWebservice.model.entities.User;
 
 public interface PasswordResetService {
     String generatePasswordResetToken(User user);

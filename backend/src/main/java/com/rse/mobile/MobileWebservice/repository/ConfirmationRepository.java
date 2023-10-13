@@ -1,7 +1,7 @@
 package com.rse.mobile.MobileWebservice.repository;
 
-import com.rse.mobile.MobileWebservice.model.token.ConfirmationToken;
-import com.rse.mobile.MobileWebservice.model.user.User;
+import com.rse.mobile.MobileWebservice.model.entities.tokens.ConfirmationToken;
+import com.rse.mobile.MobileWebservice.model.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

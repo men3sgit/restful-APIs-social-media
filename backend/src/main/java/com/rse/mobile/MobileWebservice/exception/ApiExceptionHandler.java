@@ -32,7 +32,7 @@ public class ApiExceptionHandler {
     @ExceptionHandler(ApiAuthenticationRequestException.class)
     public ResponseEntity<?> handlerApiAuthenticationRequestException(ApiAuthenticationRequestException e) {
         String message = e.getMessage();
-        HttpStatus status = message.equalsIgnoreCase("User is disabled") ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED;
+        HttpStatus status = message.contains("User is disabled") ? HttpStatus.FORBIDDEN : HttpStatus.UNAUTHORIZED;
         ApiException error = new ApiException(
                 message,
                 status.value(),

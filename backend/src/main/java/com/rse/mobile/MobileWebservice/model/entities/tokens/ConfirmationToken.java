@@ -1,6 +1,6 @@
-package com.rse.mobile.MobileWebservice.model.token;
+package com.rse.mobile.MobileWebservice.model.entities.tokens;
 
-import com.rse.mobile.MobileWebservice.model.user.User;
+import com.rse.mobile.MobileWebservice.model.entities.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package com.rse.mobile.MobileWebservice.model.token;
+package com.rse.mobile.MobileWebservice.model.entities.tokens;
 
 import java.time.LocalDateTime;
 

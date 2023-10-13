@@ -2,8 +2,8 @@ package com.rse.mobile.MobileWebservice.service.impl;
 
 import com.rse.mobile.MobileWebservice.exception.request.ApiRequestException;
 import com.rse.mobile.MobileWebservice.exception.request.ApiAuthenticationRequestException;
-import com.rse.mobile.MobileWebservice.model.token.ConfirmationToken;
-import com.rse.mobile.MobileWebservice.model.user.User;
+import com.rse.mobile.MobileWebservice.model.entities.tokens.ConfirmationToken;
+import com.rse.mobile.MobileWebservice.model.entities.User;
 import com.rse.mobile.MobileWebservice.repository.ConfirmationRepository;
 import com.rse.mobile.MobileWebservice.service.ConfirmationService;
 import lombok.RequiredArgsConstructor;
