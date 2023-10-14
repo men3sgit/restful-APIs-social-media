@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -66,5 +67,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         Boolean isSuccess = userService.verifyConfirmationToken(token);
         LOGGER.info("Token verification result: {}", isSuccess);
         return isSuccess;
+    }
+
+    @Override
+    public User getCurrentAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            // If you have a custom UserDetails implementation, you can cast the principal to it.
+            // Here assuming UserDetails is implemented by your CustomUserDetails class.
+            return (User) authentication.getPrincipal();
+
+        }
+        return null; // Return null if the user is not authenticated
     }
 }
