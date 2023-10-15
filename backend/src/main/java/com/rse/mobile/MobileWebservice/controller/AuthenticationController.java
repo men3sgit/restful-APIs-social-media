@@ -1,7 +1,9 @@
 package com.rse.mobile.MobileWebservice.controller;
 
 import com.rse.mobile.MobileWebservice.model.reponses.ResponseHandler;
+import com.rse.mobile.MobileWebservice.model.requests.ForgotPasswordRequest;
 import com.rse.mobile.MobileWebservice.model.requests.LoginRequest;
+import com.rse.mobile.MobileWebservice.model.requests.PasswordResetRequest;
 import com.rse.mobile.MobileWebservice.model.requests.RegistrationRequest;
 import com.rse.mobile.MobileWebservice.dto.UserDTO;
 import com.rse.mobile.MobileWebservice.service.AuthenticationService;
@@ -45,11 +47,31 @@ public class AuthenticationController {
     public ResponseEntity<?> confirmUserAccount(@RequestParam("token") String token) {
         LOGGER.info("Received verification request for token: {}", token);
 
-        Boolean isSuccess = authenticationService.verifyToken(token);
+        Boolean isSuccess = authenticationService.verifyUserAccount(token);
 
         LOGGER.info("Verification result: {}", isSuccess);
         String msg = "Verify Successful";
         Map<String, Object> data = Map.of("token", token);
         return responseHandler.buildSuccessResponse(msg, data);
+    }
+    @PostMapping(path = "forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        String email = request.getEmail();
+        LOGGER.info("Received forgot password request for email: {}", email);
+        try {
+            authenticationService.processForgotPassword(email);
+            LOGGER.info("Forgot password email sent successfully for email: {}", email);
+            return responseHandler.buildSuccessResponse("Password reset link sent successfully", Map.of());
+        } catch (Exception e) {
+            LOGGER.error("Error occurred while processing forgot password request for email: {}", email, e);
+            return responseHandler.buildInternalServerErrorResponse(e.getMessage());
+        }
+    }
+
+    @PutMapping(path = "password-reset")
+    public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest request) {
+        authenticationService.resetPassword(request);
+        return responseHandler.buildSuccessResponse("Your password reset successfully");
+
     }
 }

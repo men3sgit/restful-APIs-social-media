@@ -53,82 +53,18 @@ public class UserServiceImpl implements UserService {
                 });
     }
 
-    @Override
-    public UserDTO registerNewUser(User user) {
-        LOGGER.info("Registering a new user with email: {}", user.getEmail());
 
-        validateUserEmail(user.getEmail());
-        saveUserToDatabaseWithPasswordDecoder(user);
 
-        ConfirmationToken confirmationToken = generateAndSaveConfirmationToken(user);
-        confirmationService.saveConfirmationToken(confirmationToken);
-        sendConfirmationEmail(user.getFullName(), user.getEmail(), confirmationToken.getToken());
-        LOGGER.info("Registration successful for user: {}", user.getEmail());
 
-        return userDTOMapper.apply(user);
-    }
 
-    public void saveUserToDatabaseWithPasswordDecoder(User user) {
-        try {
-            // Decode the provided plain text password (this is not a recommended practice)
-            String decodedPassword = passwordEncoder.encode(user.getPassword());
-            user.setPassword(decodedPassword);
-            // Save the user to the database
-            userRepository.save(user);
-        } catch (Exception e) {
-            LOGGER.error("Error decoding password and saving user to the database: {}", e.getMessage(), e);
-            throw new RuntimeException("Error saving user to the database");
-        }
-    }
 
-    private void validateUserEmail(String email) {
-        if (userRepository.findByEmail(email).isPresent()) {
-            LOGGER.error("Email already taken: {}", email);
-            throw new ApiRequestException("Email taken");
-        }
-    }
 
-    private ConfirmationToken generateAndSaveConfirmationToken(User user) {
-        ConfirmationToken confirmationToken = confirmationService.generateConfirmationTokenWithUser(user);
-        confirmationService.saveConfirmationToken(confirmationToken);
-        return confirmationToken;
-    }
 
-    private void sendConfirmationEmail(String fullName, String email, String token) {
-        // TODO: Implement your email sending logic here
-        LOGGER.info("Sending confirmation token email to user: {}", email);
-        // Implement your email sending logic using the provided parameters and the generated token
-        try {
-            verificationService.sendVerificationTokenByEmail(fullName, email, token);
-            LOGGER.info("Verification: {}", email);
-        } catch (Exception e) {
-            LOGGER.error("Verification{}", email, e);
-            throw new ApiRequestException("Verification");
-        }
-    }
 
-    @Override
-    public Boolean verifyConfirmationToken(String token) {
-        try {
-            LOGGER.info("Verifying user token: {}", token);
-            User enabledUser = confirmationService.updateConfirmedToken(token);
-            userRepository.save(enabledUser);
-            LOGGER.info("User enabled: {}", enabledUser.getEmail());
-        } catch (RuntimeException e) {
-            LOGGER.error("Error verifying user token: {}", e.getMessage(), e);
-            throw new ApiAuthenticationRequestException("User was active");
-        }
-        return Boolean.TRUE;
-    }
 
-    @Override
-    public String processForgotPassword(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-        String token = passwordResetService.generatePasswordResetToken(user);
-        sendResetPasswordTokenEmail(user.getFullName(), user.getEmail(), token);
-        return token;
-    }
+
+
+
 
     @Override
     public UserDTO updateUser(Long userId, UpdateUserRequest updateUserRequest) {
@@ -154,16 +90,7 @@ public class UserServiceImpl implements UserService {
         return userDTOMapper.apply(existingUser);
     }
 
-    @Override
-    public String resetPassword(PasswordResetRequest request) {
-        PasswordResetToken passwordResetToken = passwordResetService.getPasswordResetToken(request.token());
-        User user = passwordResetToken.getUser();
-        user.setPassword(passwordEncoder.encode(request.newPassword()));
-        userRepository.save(user);
-        passwordResetToken.setResetAt(LocalDateTime.now());
-        passwordResetService.savePasswordResetToken(passwordResetToken);
-        return "Update password Successful";
-    }
+
 
     /**
      * Allows a user to follow another user in the social media application.
@@ -212,14 +139,5 @@ public class UserServiceImpl implements UserService {
         throw new IllegalArgumentException("Unsupported data type: " + fieldType);
     }
 
-    private void sendResetPasswordTokenEmail(String fullName, String email, String resetToken) {
-        try {
-            emailService.sendHtmlResetPasswordMailMessage(fullName, email, resetToken);
-            LOGGER.info("Reset password email sent successfully to user: {}", fullName);
-        } catch (Exception e) {
-            LOGGER.error("Failed to send reset password email to user: {}", fullName, e);
-            throw new ApiRequestException("Failed to send reset password email");
-        }
-    }
 
 }

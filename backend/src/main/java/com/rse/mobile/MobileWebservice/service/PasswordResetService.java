@@ -5,7 +5,10 @@ import com.rse.mobile.MobileWebservice.model.entities.User;
 
 public interface PasswordResetService {
     String generatePasswordResetToken(User user);
-    PasswordResetToken getPasswordResetToken(String token);
+
+    PasswordResetToken validatePasswordResetToken(String token);
+
     void savePasswordResetToken(PasswordResetToken passwordResetToken);
 
+    void sendResetPasswordTokenEmail(String fullName, String email, String resetToken);
 }

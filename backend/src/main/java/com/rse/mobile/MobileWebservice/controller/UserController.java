@@ -70,26 +70,7 @@ public class UserController {
         }
     }
 
-    @PostMapping(path = "/forgot-password")
-    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest request) {
-        String email = request.getEmail();
-        LOGGER.info("Received forgot password request for email: {}", email);
-        try {
-            userService.processForgotPassword(email);
-            LOGGER.info("Forgot password email sent successfully for email: {}", email);
-            return responseHandler.buildSuccessResponse("Password reset link sent successfully", Map.of());
-        } catch (Exception e) {
-            LOGGER.error("Error occurred while processing forgot password request for email: {}", email, e);
-            return responseHandler.buildInternalServerErrorResponse(e.getMessage());
-        }
-    }
 
-    @PutMapping(path = "/password-reset")
-    public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest request) {
-        userService.resetPassword(request);
-        return responseHandler.buildSuccessResponse("Your password reset successfully");
-
-    }
 }
 
 

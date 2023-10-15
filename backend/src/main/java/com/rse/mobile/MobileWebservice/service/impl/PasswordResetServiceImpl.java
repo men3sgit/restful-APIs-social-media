@@ -4,6 +4,7 @@ import com.rse.mobile.MobileWebservice.exception.request.ApiRequestException;
 import com.rse.mobile.MobileWebservice.model.entities.tokens.PasswordResetToken;
 import com.rse.mobile.MobileWebservice.model.entities.User;
 import com.rse.mobile.MobileWebservice.repository.PasswordResetRepository;
+import com.rse.mobile.MobileWebservice.service.EmailService;
 import com.rse.mobile.MobileWebservice.service.PasswordResetService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 public class PasswordResetServiceImpl implements PasswordResetService {
     public static final Logger LOGGER = LoggerFactory.getLogger(PasswordResetServiceImpl.class);
     private final PasswordResetRepository passwordResetTokenRepository;
-
+    private final EmailService emailService;
     @Override
     public String generatePasswordResetToken(User user) {
 
@@ -29,7 +30,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     }
 
     @Override
-    public PasswordResetToken getPasswordResetToken(String token) {
+    public PasswordResetToken validatePasswordResetToken(String token) {
         if (isExpiredToken(token)) {
             LOGGER.error("Expired passwordResetToken token: {}", token);
             throw new ApiRequestException("Token expired");
@@ -51,6 +52,16 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         }
 
         return isExpired;
+    }
+    @Override
+    public void sendResetPasswordTokenEmail(String fullName, String email, String resetToken) {
+        try {
+            emailService.sendHtmlResetPasswordMailMessage(fullName, email, resetToken);
+            LOGGER.info("Reset password email sent successfully to user: {}", fullName);
+        } catch (Exception e) {
+            LOGGER.error("Failed to send reset password email to user: {}", fullName, e);
+            throw new ApiRequestException("Failed to send reset password email");
+        }
     }
 
 }

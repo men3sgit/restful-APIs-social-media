@@ -5,4 +5,5 @@ public interface EmailService {
     void sendHtmlMailMessage(String name, String to, String token);
     void sendHtmlResetPasswordMailMessage(String name, String to, String resetToken);
 
+
 }

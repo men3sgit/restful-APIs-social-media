@@ -5,7 +5,9 @@ import com.rse.mobile.MobileWebservice.exception.request.ApiAuthenticationReques
 import com.rse.mobile.MobileWebservice.model.entities.tokens.ConfirmationToken;
 import com.rse.mobile.MobileWebservice.model.entities.User;
 import com.rse.mobile.MobileWebservice.repository.ConfirmationRepository;
+import com.rse.mobile.MobileWebservice.repository.UserRepository;
 import com.rse.mobile.MobileWebservice.service.ConfirmationService;
+import com.rse.mobile.MobileWebservice.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,15 +20,11 @@ import java.time.LocalDateTime;
 public class ConfirmationServiceImpl implements ConfirmationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfirmationServiceImpl.class);
     private final ConfirmationRepository confirmationRepository;
+    private final EmailService emailService;
+    private final UserRepository userRepository;
 
     @Override
-    public void saveConfirmationToken(ConfirmationToken token) {
-        LOGGER.info("Saving confirmation token: {}", token.getToken());
-        confirmationRepository.save(token);
-    }
-
-    @Override
-    public ConfirmationToken generateConfirmationTokenWithUser(User user) {
+    public ConfirmationToken generateConfirmationToken(User user) {
         LOGGER.info("Generating confirmation token for user: {}", user.getEmail());
 
         ConfirmationToken confirmationToken = new ConfirmationToken(user);
@@ -37,32 +35,59 @@ public class ConfirmationServiceImpl implements ConfirmationService {
     }
 
     @Override
+    public Boolean validateToken(String token) {
+        ConfirmationToken confirmationToken = confirmationRepository.findByToken(token).orElseThrow(() -> new ApiRequestException("Token invalid"));
+        return !isExpiredToken(confirmationToken);
+    }
+
+
+    @Override
     public User updateConfirmedToken(String token) {
-        if (isExpiredToken(token)) {
+        if (!validateToken(token)) {
             LOGGER.error("Expired confirmation token: {}", token);
             throw new ApiRequestException("Token expired");
         }
-        LocalDateTime now = LocalDateTime.now();
+
         LOGGER.info("Updating confirmation token: {}", token);
-        ConfirmationToken updateToken = confirmationRepository.findByToken(token).orElseThrow(() -> new ApiAuthenticationRequestException("Token invalid"));
+        ConfirmationToken updateToken = confirmationRepository
+                .findByToken(token).get();
+
+        LocalDateTime now = LocalDateTime.now();
         updateToken.setConfirmedAt(now);
         confirmationRepository.save(updateToken);
+
         LOGGER.info("Updated confirmation token at: {}", now);
 
         User updateUser = confirmationRepository.findUserByToken(token);
         updateUser.setEnabled(Boolean.TRUE);
+        userRepository.save(updateUser);
         LOGGER.info("Updated user: {}", updateUser);
         return updateUser;
     }
 
-    private Boolean isExpiredToken(String token) {
-        ConfirmationToken confirmationToken = confirmationRepository.findByToken(token).orElseThrow(() -> new ApiRequestException("Confirmation token invalid"));
+    private Boolean isExpiredToken(ConfirmationToken confirmationToken) {
         boolean isExpired = confirmationToken.getExpiredAt().isBefore(LocalDateTime.now());
         if (isExpired) {
-            LOGGER.error("Confirmation token expired: {}", token);
+            LOGGER.error("Confirmation token expired: {}", confirmationToken.getToken());
+            throw new ApiRequestException("Token was expired");
         }
 
-        return isExpired;
+        return false;
     }
+
+    @Override
+    public void sendConfirmationEmail(String fullName, String email, String token) {
+        // TODO: Implement your email sending logic here
+        LOGGER.info("Sending confirmation token email to user: {}", email);
+        // Implement your email sending logic using the provided parameters and the generated token
+        try {
+            emailService.sendHtmlMailMessage(fullName, email, token);
+            LOGGER.info("Verification: {}", email);
+        } catch (Exception e) {
+            LOGGER.error("Verification{}", email, e);
+            throw new ApiRequestException("Verification");
+        }
+    }
+
 
 }

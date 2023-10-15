@@ -12,16 +12,8 @@ import java.util.Set;
 
 public interface UserService {
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
-    UserDTO registerNewUser(User user);
-
-    Boolean verifyConfirmationToken(String token);
-
-
-    String processForgotPassword(String email);
 
     UserDTO updateUser(Long userId, UpdateUserRequest updateUserRequest);
-
-    String resetPassword(PasswordResetRequest request);
 
     // 13/10/2023
     void followUser(Long followedId, Long followById);

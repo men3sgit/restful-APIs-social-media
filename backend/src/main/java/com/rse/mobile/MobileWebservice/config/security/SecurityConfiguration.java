@@ -39,7 +39,9 @@ public class SecurityConfiguration {
     public WebSecurityCustomizer webSecurityCustomizer() {
         LOGGER.info("Create WebSecurityCustomizer bean");
         return (web) -> web.ignoring().requestMatchers(
-                "/api/v*/auth/**",
+                "/api/v*/auth/login",
+                "/api/v*/auth/register",
+                "/api/v*/auth/verify",
                 "/api/v*/unsecured/**",
                 "/api/v*/users/**"
         );
