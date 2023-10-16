@@ -39,10 +39,9 @@
 #                      required: true
 #
 #
-#
-#
-#
-#
+
+
+
 spring:
   profiles:
     active: test # Replace ${ACTIVE_PROFILE} with the active profile
@@ -82,3 +81,5 @@ server:
 
 VERIFY_EMAIL_HOST: http://localhost:${server.port}
 TITLE: Lambda
+
+SECRET_KEY: c3ckfrhaKW8Mplm9ylgQCsMLoFmsip/ouP1u51eWRLRtCgDA6OFoLH+azJtNEDUYODPqhm/Kms2jYJdaIczcrap9vBVrbd7qMk1AuoNJjZg=
