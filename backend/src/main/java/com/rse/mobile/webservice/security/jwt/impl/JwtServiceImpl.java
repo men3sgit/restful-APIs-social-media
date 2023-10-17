@@ -1,9 +1,12 @@
-package com.rse.mobile.webservice.config.security.jwt;
+package com.rse.mobile.webservice.security.jwt.impl;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import com.rse.mobile.webservice.security.jwt.JwtService;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ import java.util.function.Function;
 
 @Service
 public class JwtServiceImpl implements JwtService {
+    public static final Logger LOGGER = LoggerFactory.getLogger(JwtServiceImpl.class);
     @Value("${SECRET_KEY}")
     private String SECRET_KEY;
 
@@ -32,8 +36,21 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public boolean validateToken(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        try {
+            final String username = extractUsername(token);
+            return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        } catch (MalformedJwtException e) {
+            LOGGER.error("Invalid JWT token");
+        } catch (ExpiredJwtException e) {
+            LOGGER.error("Expired JWT token");
+        } catch (UnsupportedJwtException e) {
+            LOGGER.error("Unsupported JWT token");
+        } catch (IllegalArgumentException e) {
+            LOGGER.error("JWT claims string is empty");
+        } catch (SignatureException e) {
+            LOGGER.error("there is an error with the signature of you token ");
+        }
+        return false;
     }
 
     private boolean isTokenExpired(String token) {
@@ -73,6 +90,8 @@ public class JwtServiceImpl implements JwtService {
         final Claims claims = extractAllClaims(token);
         return claimResolver.apply(claims);
     }
+
+
 
     private Claims extractAllClaims(String token) {
         return Jwts.parser()

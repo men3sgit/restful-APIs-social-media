@@ -1,11 +1,15 @@
 package com.rse.mobile.webservice.services.impl;
 
-import com.rse.mobile.webservice.config.security.jwt.JwtService;
+import com.rse.mobile.webservice.helper.KeyConstant;
+import com.rse.mobile.webservice.helper.MessageConstant;
+import com.rse.mobile.webservice.security.jwt.JwtService;
+import com.rse.mobile.webservice.dto.UserDTO;
+import com.rse.mobile.webservice.dto.mapper.UserDTOMapper;
 import com.rse.mobile.webservice.exceptions.request.ApiAuthenticationRequestException;
 import com.rse.mobile.webservice.exceptions.request.ApiRequestException;
 import com.rse.mobile.webservice.entities.tokens.ConfirmationToken;
 import com.rse.mobile.webservice.entities.tokens.PasswordResetToken;
-import com.rse.mobile.webservice.payload.requests.LoginRequest;
+import com.rse.mobile.webservice.payload.requests.AuthenticationRequest;
 import com.rse.mobile.webservice.payload.requests.PasswordResetRequest;
 import com.rse.mobile.webservice.payload.requests.RegistrationRequest;
 import com.rse.mobile.webservice.entities.Role;
@@ -19,6 +23,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,9 +41,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final PasswordResetService passwordResetService;
     private final JwtService jwtService;
+    private final UserDTOMapper userDTOMapper;
+    private final UserDetailsService userDetailsService;
 
     @Override
-    public String registerNewUser(RegistrationRequest request) {
+    public UserDTO registerNewUser(RegistrationRequest request) {
         boolean isValidEmail = emailValidator.test(request.getEmail());
         if (!isValidEmail) {
             LOGGER.error("Invalid email provided during registration: {}", request.getEmail());
@@ -62,7 +69,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         confirmationService.sendConfirmationEmail(user.getFullName(), user.getEmail(), confirmationToken.getToken());
         LOGGER.info("Registration successful for user: {}", user.getEmail());
 
-        return jwtService.generateToken(user);
+        return userDTOMapper.apply(user);
 
     }
 
@@ -91,17 +98,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 
     @Override
-    public Boolean authenticated(LoginRequest request) {
+    public String authenticated(AuthenticationRequest request) {
         Authentication authentication = new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
         try {
             LOGGER.info("Authenticating user with email: {}", request.getEmail());
-            Boolean isAuthenticated = authenticationManager.authenticate(authentication).isAuthenticated();
+            authenticationManager.authenticate(authentication).isAuthenticated();
             LOGGER.info("User authenticated successfully: {}", request.getEmail());
-            return isAuthenticated;
+            return jwtService.generateToken(userDetailsService.loadUserByUsername(authentication.getName()));
         } catch (RuntimeException e) {
             LOGGER.error("Authentication failed for user with email: {}", request.getEmail(), e);
             throw new ApiAuthenticationRequestException(e.getMessage());
         }
+    }
+
+    @Override
+    public String logout() {
+        return MessageConstant.MSG_LOGOUT_SUCCESSFUL;
     }
 
 
@@ -150,5 +162,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
         return Boolean.TRUE;
     }
+
+    private String generateAccessToken(String authHeader) {
+        return authHeader.split("\\s+")[1];
+    }
+
 
 }

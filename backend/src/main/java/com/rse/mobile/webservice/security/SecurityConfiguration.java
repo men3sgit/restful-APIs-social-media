@@ -1,12 +1,11 @@
-package com.rse.mobile.webservice.config.security;
+package com.rse.mobile.webservice.security;
 
-import com.rse.mobile.webservice.config.security.jwt.JwtAuthenticationFilter;
+import com.rse.mobile.webservice.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -51,8 +50,10 @@ public class SecurityConfiguration {
                         "/api/v*/auth/login",
                         "/api/v*/auth/register",
                         "/api/v*/auth/verify",
+                        "/api/v*/auth/forgot-password",
                         "/api/v*/unsecured/**",
-                        "/api/v*/users/**"
+                        "/api/v*/users/{userId}/followers",
+                        "/api/v*/posts/{userId}"
                 );
     }
 

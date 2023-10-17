@@ -5,6 +5,7 @@ import com.rse.mobile.webservice.exceptions.request.ApiRequestException;
 import com.rse.mobile.webservice.payload.requests.FollowRequest;
 import com.rse.mobile.webservice.payload.requests.UpdateUserRequest;
 import com.rse.mobile.webservice.dto.UserDTO;
+import com.rse.mobile.webservice.services.UserFollowerService;
 import com.rse.mobile.webservice.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -51,8 +52,8 @@ public class UserController {
     @PostMapping("/follow")
     public ResponseEntity<?> followUser(@RequestBody FollowRequest request) {
         try {
-            userService.followUser(request.followedId(), request.followById());
-            return responseHandler.buildSuccessResponse("User followed successfully.", request.followById());
+            userService.followOrUnfollow(request.followedId(), UserFollowerService.FOLLOW);
+            return responseHandler.buildSuccessResponse("User followed successfully.", request.followedId());
         } catch (RuntimeException e) {
             return responseHandler.buildErrorResponse("User followed failure.", e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -60,12 +61,13 @@ public class UserController {
     @PostMapping("/unfollow")
     public ResponseEntity<?> unfollowUser(@RequestBody FollowRequest request) {
         try {
-            userService.unfollowUser(request.followedId(), request.followById());
-            return responseHandler.buildSuccessResponse("User unfollowed successfully.", request.followById());
+            userService.followOrUnfollow(request.followedId(), UserFollowerService.UNFOLLOW);
+            return responseHandler.buildSuccessResponse("User unfollowed successfully.");
         } catch (RuntimeException e) {
             return responseHandler.buildErrorResponse("User unfollowed failure.", e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
 
 
 }

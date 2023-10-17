@@ -13,8 +13,8 @@ public interface UserService {
     UserDTO updateUser(Long userId, UpdateUserRequest updateUserRequest);
 
     // 13/10/2023
-    void followUser(Long followedId, Long followById);
-    void unfollowUser(Long followedId, Long followById);
+
+    void followOrUnfollow(Long followedId, int mode);
 
     List<UserDTO> getFollowers(Long userId);
 

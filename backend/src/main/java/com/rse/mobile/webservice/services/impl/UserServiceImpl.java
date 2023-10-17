@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -28,6 +27,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserDTOMapper userDTOMapper;
     private final UserFollowerService userFollowerService;
+    private final AuthenticationService authenticationService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -72,19 +72,19 @@ public class UserServiceImpl implements UserService {
      * with another user, enabling them to view updates and activities of the
      * followed user on their feed.
      *
-     * @param followedId     The unique identifier of the user who wants to follow another user.
-     * @param followById The unique identifier of the user whom the follower intends to follow.
+     * @param followedId The unique identifier of the user who wants to follow another user.
      * @throws EntityNotFoundException Thrown when either the follower or the user to follow is not found in the database.
      * @throws RuntimeException        Thrown when the user is already being followed by the follower.
      */
     @Override
-    public void followUser(Long followedId, Long followById) {
-        userFollowerService.followUser(followedId,followById);
-    }
+    public void followOrUnfollow(Long followedId, int mode) {
+        User currentUser = authenticationService.getCurrentAuthenticatedUser();
+        if (mode == UserFollowerService.FOLLOW) {
+            userFollowerService.followUser(followedId, currentUser.getId());
+        } else {
+            userFollowerService.unfollowUser(followedId, currentUser.getId());
+        }
 
-    @Override
-    public void unfollowUser(Long followedId, Long followById) {
-        userFollowerService.unfollowUser(followedId,followById);
     }
 
     @Override

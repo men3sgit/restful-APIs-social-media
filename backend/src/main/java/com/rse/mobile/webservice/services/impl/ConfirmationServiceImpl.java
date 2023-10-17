@@ -1,5 +1,6 @@
 package com.rse.mobile.webservice.services.impl;
 
+import com.rse.mobile.webservice.dto.mapper.UserDTOMapper;
 import com.rse.mobile.webservice.exceptions.request.ApiRequestException;
 import com.rse.mobile.webservice.entities.tokens.ConfirmationToken;
 import com.rse.mobile.webservice.entities.User;
@@ -21,12 +22,14 @@ public class ConfirmationServiceImpl implements ConfirmationService {
     private final ConfirmationRepository confirmationRepository;
     private final EmailService emailService;
     private final UserRepository userRepository;
+    private final UserDTOMapper userDTOMapper;
 
     @Override
     public ConfirmationToken generateConfirmationToken(User user) {
         LOGGER.info("Generating confirmation token for user: {}", user.getEmail());
 
         ConfirmationToken confirmationToken = new ConfirmationToken(user);
+        confirmationRepository.save(confirmationToken);
 
         LOGGER.info("Generated confirmation token: {}", confirmationToken.getToken());
 
@@ -35,7 +38,7 @@ public class ConfirmationServiceImpl implements ConfirmationService {
 
     @Override
     public Boolean validateToken(String token) {
-        ConfirmationToken confirmationToken = confirmationRepository.findByToken(token).orElseThrow(() -> new ApiRequestException("Token invalid"));
+        ConfirmationToken confirmationToken = confirmationRepository.findByToken(token).orElseThrow(() -> new ApiRequestException("Token invalidd"));
         return !isExpiredToken(confirmationToken);
     }
 
@@ -60,7 +63,7 @@ public class ConfirmationServiceImpl implements ConfirmationService {
         User updateUser = confirmationRepository.findUserByToken(token);
         updateUser.setEnabled(Boolean.TRUE);
         userRepository.save(updateUser);
-        LOGGER.info("Updated user: {}", updateUser);
+        LOGGER.info("Updated user: {}", userDTOMapper.apply(updateUser));
         return updateUser;
     }
 

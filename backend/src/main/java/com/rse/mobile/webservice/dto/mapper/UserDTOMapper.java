@@ -2,10 +2,17 @@ package com.rse.mobile.webservice.dto.mapper;
 
 import com.rse.mobile.webservice.entities.User;
 import com.rse.mobile.webservice.dto.UserDTO;
+import org.springframework.stereotype.Service;
 
-import java.util.function.Function;
-
-public interface UserDTOMapper extends Function<User, UserDTO> {
+@Service
+public class UserDTOMapper implements DTOMapper<User, UserDTO> {
     @Override
-    UserDTO apply(User user);
+    public UserDTO apply(User user) {
+        return new UserDTO(
+                user.getUsername(),
+                user.getFullName(),
+                user.getDob(),
+                user.getRole()
+        );
+    }
 }

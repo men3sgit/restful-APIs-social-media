@@ -1,4 +1,4 @@
-package com.rse.mobile.webservice.config.security.jwt;
+package com.rse.mobile.webservice.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import org.springframework.security.core.userdetails.UserDetails;

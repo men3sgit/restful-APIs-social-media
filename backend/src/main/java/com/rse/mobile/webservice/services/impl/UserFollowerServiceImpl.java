@@ -46,25 +46,6 @@ public class UserFollowerServiceImpl implements UserFollowerService {
     }
 
     @Override
-    public List<UserDTO> getFollowers(Long userId) {
-        return userFollowerRepository
-                .findByUserId(userId)
-                .stream()
-                .map(follower -> userDTOMapper
-                        .apply(follower.getUser())).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<UserDTO> getFollowing(Long followerId) {
-        return userFollowerRepository
-                .findByFollowerId(followerId)
-                .stream()
-                .map(follower -> userDTOMapper
-                        .apply(follower.getUser())).collect(Collectors.toList());
-    }
-
-
-    @Override
     public void unfollowUser(Long userId, Long followerId) {
         Optional<User> userOptional = userRepository.findById(userId);
         Optional<User> followerOptional = userRepository.findById(followerId);
@@ -88,4 +69,24 @@ public class UserFollowerServiceImpl implements UserFollowerService {
             throw new ApiRequestException("User or follower not found.");
         }
     }
+
+    @Override
+    public List<UserDTO> getFollowers(Long userId) {
+        return userFollowerRepository
+                .findByUserId(userId)
+                .stream()
+                .map(follower -> userDTOMapper
+                        .apply(follower.getUser())).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserDTO> getFollowing(Long followerId) {
+        return userFollowerRepository
+                .findByFollowerId(followerId)
+                .stream()
+                .map(follower -> userDTOMapper
+                        .apply(follower.getUser())).collect(Collectors.toList());
+    }
+
+
 }

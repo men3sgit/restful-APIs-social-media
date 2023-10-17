@@ -1,6 +1,6 @@
-package com.rse.mobile.webservice.config.security.jwt;
+package com.rse.mobile.webservice.security.jwt;
 
-import com.rse.mobile.webservice.helper.Constant;
+import com.rse.mobile.webservice.helper.KeyConstant;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,10 +28,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        final String authHeader = request.getHeader(Constant.KEY_AUTHORIZATION);
+        final String authHeader = request.getHeader(KeyConstant.KEY_AUTHORIZATION);
         final String jwt;
         final String userEmail;
-        if (authHeader == null || !authHeader.startsWith(Constant.KEY_BEARER)) {
+        if (authHeader == null || !authHeader.startsWith(KeyConstant.KEY_BEARER)) {
             filterChain.doFilter(request, response);
             return;
         }
