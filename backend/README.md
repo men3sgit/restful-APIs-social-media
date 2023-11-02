@@ -1,6 +1,6 @@
 # Backend Service for Social Media
 
-This is the backend service for the Project Name. It is built using the Spring framework and integrates with Kafka for messaging, OAuth for authentication, Minio for object storage, and includes QR code generation.
+This is the backend service for the Social Media. It is built using the Spring framework and integrates with Kafka for messaging, OAuth for authentication, Minio for object storage, and includes QR code generation.
 
 ## Table of Contents
 
