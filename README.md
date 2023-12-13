@@ -13,7 +13,7 @@ Before you start, make sure you have the following installed:
 - [Node.js and npm](https://nodejs.org/)
 - [Spring Boot](https://spring.io/projects/spring-boot)
 - [React](https://reactjs.org/)
-- MySQL or another relational database
+- [PosgreSQL] or another relational database
 
 ## Installation
 
